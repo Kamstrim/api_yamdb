@@ -54,9 +54,9 @@ def get_jwt_token(request):
             {'Код введен не верно'},
             status=status.HTTP_400_BAD_REQUEST
         )
-    refresh = RefreshToken.for_user(user)
+    token = RefreshToken.for_user(user)
     return Response(
-        {'access': str(refresh.access_token)},
+        {'access': str(token.access_token)},
         status=status.HTTP_200_OK
     )
 
@@ -82,4 +82,3 @@ class UsersViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exceptions=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
-

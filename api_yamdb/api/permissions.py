@@ -1,7 +1,5 @@
 from rest_framework import permissions
 
-from users.models import User
-
 
 # Reviews, Comment,
 class IsModeratorPermission(permissions.BasePermission):
@@ -9,9 +7,9 @@ class IsModeratorPermission(permissions.BasePermission):
         return (
             request.method in permissions.SAFE_METHODS
             or obj.author == request.user
-            or request.user.role == User.ADMIN
+            or request.user.role == 'admin'
             or request.user.is_superuser
-            or request.user.role == User.MODERATOR
+            or request.user.role == 'moderator'
         )
 
 
@@ -27,4 +25,3 @@ class IsAuthorOrReadOnlyPermission(permissions.BasePermission):
             request.method in permissions.SAFE_METHODS
             or request.user == obj.author
         )
-

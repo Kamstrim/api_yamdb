@@ -4,7 +4,7 @@ from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import (IsAuthenticatedOrReadOnly,)
 from django_filters.rest_framework import DjangoFilterBackend
 
-from .permissions import IsAuthorOrReadOnlyPermission, IsUserAdminModeratorOrReadOnly
+from .permissions import IsAuthorOrReadOnlyPermission, IsModeratorPermission
 from .serializers import (CategorySerializer,
                           GenreSerializer,
                           TitleSerializer,
@@ -12,13 +12,12 @@ from .serializers import (CategorySerializer,
                           ReviewSerializer
                           )
 
-from reviews.models import Category, Genre, Title, Review
+from reviews.models import Category, Genre, Title, Review, Comment
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
     serializer_class = ReviewSerializer
-    permission_classes = [IsUserAdminModeratorOrReadOnly]
-    pagination_class = LimitOffsetPagination
+    permission_classes = [IsModeratorPermission]
 
     def get_queryset(self):
         title_id = self.kwargs.get('title_id')
@@ -34,7 +33,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = (IsUserAdminModeratorOrReadOnly,)
+    permission_classes = (IsModeratorPermission,)
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
@@ -46,7 +45,7 @@ class CommentViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         review_id = self.kwargs.get('review_id')
         review = get_object_or_404(Review, pk=review_id)
-        serializer.save(author=self.request.user, review=review
+        serializer.save(author=self.request.user, review=review)
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -75,7 +74,6 @@ class TitleViewSet(viewsets.ModelViewSet):
     filter_backends = (DjangoFilterBackend,
                        filters.SearchFilter, filters.OrderingFilter)
     filterset_fields = ('category', 'genre', 'name', 'year')
-    # search_fields = ('name',)
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)

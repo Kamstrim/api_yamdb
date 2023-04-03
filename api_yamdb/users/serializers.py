@@ -25,3 +25,7 @@ class ConfirmationSerializer(serializers.ModelSerializer):
 class TokenSerializer(serializers.Serializer):
     username = serializers.CharField(required=True)
     confirmation_code = serializers.CharField(required=True)
+
+    class Meta:
+        model = CustomUser
+        fields = ('username', 'confirmation_code')
