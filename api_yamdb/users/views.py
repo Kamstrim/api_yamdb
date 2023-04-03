@@ -12,7 +12,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .exceptions import UserValueError
 from .permissions import IsAdmin
 from .models import CustomUser
-from .serializers import UsersSerializer, ConfirmationSerializer, TokenSerializer
+from .serializers import UserSerializer, ConfirmationSerializer, TokenSerializer
 
 
 @api_view(['POST'])
@@ -41,7 +41,7 @@ def get_confirmation_code(request):
 def get_jwt_token(request):
     """Получение Токена"""
     serializer = TokenSerializer(data=request.data)
-    serializer.is_valid(raise_exceptions=True)
+    serializer.is_valid(raise_exception=True)
     user = get_object_or_404(
         CustomUser,
         username=serializer.data.get('username')
@@ -56,14 +56,14 @@ def get_jwt_token(request):
         )
     token = RefreshToken.for_user(user)
     return Response(
-        {'access': str(token.access_token)},
+        {'token': str(token.access_token)},
         status=status.HTTP_200_OK
     )
 
 
 class UsersViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
-    serializer = UsersSerializer
+    serializer_class = UserSerializer
     lookup_field = 'username'
     permission_classes = [IsAdmin]
     pagination_class = PageNumberPagination
@@ -75,10 +75,9 @@ class UsersViewSet(viewsets.ModelViewSet):
     )
     def me(self, request):
         user = request.user
-        if request.method == 'GET':
-            serializer = self.get_serializer(user)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        serializer = self.get_serializer(user, data=request.data, partial=True)
-        serializer.is_valid(raise_exceptions=True)
-        serializer.save()
+        serializer = self.get_serializer(user)
+        if request.method == 'PATCH':
+            serializer = self.get_serializer(user, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(email=user.email, role=user.role)
         return Response(serializer.data, status=status.HTTP_200_OK)
