@@ -3,23 +3,24 @@ from rest_framework import serializers
 from .models import CustomUser
 
 
-class UserSerializer(serializers.ModelSerializer):
+class CustomUserSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = CustomUser
         fields = (
             'first_name', 'last_name', 'username', 'bio', 'email', 'role',
         )
 
-    def validate_username(self, value):
-        if value == 'me':
-            raise serializers.ValidationError("Нельзя использовать имя 'me' ")
-        return value
-
 
 class ConfirmationSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ('username', 'email',)
+        fields = ('username', 'email')
+
+    def validate_username(self, value):
+        if value == 'me':
+            raise serializers.ValidationError("Нельзя использовать имя 'me' ")
+        return value
 
 
 class TokenSerializer(serializers.Serializer):
