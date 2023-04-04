@@ -30,7 +30,7 @@ class CustomUser(AbstractUser):
     role = models.CharField(
         max_length=2,
         choices=ROLE_CHOICES,
-        default=USER,
+        default='user'
     )
 
     @property
