@@ -12,7 +12,7 @@ from .serializers import (CategorySerializer,
                           ReviewSerializer
                           )
 
-from reviews.models import Category, Genre, Title, Review, Comment
+from reviews.models import Category, Genre, Title, Review
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
@@ -33,7 +33,7 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = CommentSerializer
-    permission_classes = (IsModeratorPermission,)
+    permission_classes = [IsAuthorOrReadOnlyPermission]
     pagination_class = LimitOffsetPagination
 
     def get_queryset(self):
@@ -76,4 +76,4 @@ class TitleViewSet(viewsets.ModelViewSet):
     filterset_fields = ('category', 'genre', 'name', 'year')
 
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save()

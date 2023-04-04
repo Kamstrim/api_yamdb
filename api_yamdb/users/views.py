@@ -12,7 +12,10 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from .exceptions import UserValueError
 from .permissions import IsAdmin
 from .models import CustomUser
-from .serializers import UserSerializer, ConfirmationSerializer, TokenSerializer
+from .serializers import (UserSerializer,
+                          ConfirmationSerializer,
+                          TokenSerializer
+                          )
 
 
 @api_view(['POST'])
@@ -23,7 +26,8 @@ def get_confirmation_code(request):
     serializer.is_valid(raise_exception=True)
     email = serializer.data.get('email')
     username = serializer.data.get('username')
-    user, created = CustomUser.objects.get_or_create(username=username, email=email)
+    user, created = CustomUser.objects.get_or_create(
+        username=username, email=email)
     if not created:
         return Response(status=status.HTTP_400_BAD_REQUEST)
     confirmation_code = default_token_generator.make_token(user)
@@ -77,7 +81,8 @@ class UsersViewSet(viewsets.ModelViewSet):
         user = request.user
         serializer = self.get_serializer(user)
         if request.method == 'PATCH':
-            serializer = self.get_serializer(user, data=request.data, partial=True)
+            serializer = self.get_serializer(
+                user, data=request.data, partial=True)
             serializer.is_valid(raise_exception=True)
             serializer.save(email=user.email, role=user.role)
         return Response(serializer.data, status=status.HTTP_200_OK)
