@@ -1,12 +1,16 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import RegexValidator
 from django.db import models
-from rest_framework.validators import UniqueValidator
 
 REGEX = r'^[\w.@+-]+\Z'
+LIMIT_USERNAME = 150
+LIMIT_EMAIL = 254
+LIMIT_ROLE = 50
 
 
 class CustomUser(AbstractUser):
+    """Кастомизация модели User."""
+
     ADMIN = 'admin'
     MODERATOR = 'moderator'
     USER = 'user'
@@ -16,13 +20,12 @@ class CustomUser(AbstractUser):
         (ADMIN, 'admin'),
     )
     username = models.CharField(
-        max_length=150,
-        blank=False,
+        max_length=LIMIT_USERNAME,
         validators=[RegexValidator(REGEX)],
         unique=True,
     )
     email = models.EmailField(
-        max_length=254,
+        max_length=LIMIT_EMAIL,
         unique=True,
     )
 
@@ -31,7 +34,7 @@ class CustomUser(AbstractUser):
         null=True,
     )
     role = models.CharField(
-        max_length=50,
+        max_length=LIMIT_ROLE,
         choices=ROLE_CHOICES,
         default=USER
     )

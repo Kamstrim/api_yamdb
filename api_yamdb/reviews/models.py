@@ -1,14 +1,15 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.utils import timezone
 from users.models import CustomUser
 
 
 class Category(models.Model):
+    """Модель Категории (типы) произведений."""
+
     name = models.CharField(
         max_length=256,
         unique=True,
-        verbose_name='Название категории',
+        verbose_name='Название',
     )
     slug = models.SlugField(
         max_length=50,
@@ -16,12 +17,11 @@ class Category(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
-        ordering = ('name', )
+        verbose_name = "Категория"
+        ordering = ['name']
         constraints = [
             models.UniqueConstraint(
-                fields=['name', 'slug'], name='name_slug_unique_ctg')
+                fields=['name', 'slug'], name='name_slug_unique_category')
         ]
 
     def __str__(self):
@@ -29,10 +29,12 @@ class Category(models.Model):
 
 
 class Genre(models.Model):
+    """Модель Категории жанров."""
+
     name = models.CharField(
         max_length=256,
         unique=True,
-        verbose_name='Название жанра'
+        verbose_name='Название',
     )
     slug = models.SlugField(
         max_length=50,
@@ -40,12 +42,11 @@ class Genre(models.Model):
     )
 
     class Meta:
-        verbose_name = 'Жанр'
-        verbose_name_plural = 'Жанры'
-        ordering = ('name', )
+        verbose_name = "Жанр"
+        ordering = ['name']
         constraints = [
             models.UniqueConstraint(
-                fields=['name', 'slug'], name='name_slug_unique_gnr')
+                fields=['name', 'slug'], name='name_slug_unique_genre')
         ]
 
     def __str__(self):
@@ -53,6 +54,9 @@ class Genre(models.Model):
 
 
 class Title(models.Model):
+    """Модель Произведения, к которым пишут отзывы
+    (определённый фильм, книга или песенка)."""
+
     name = models.CharField(
         max_length=256,
         unique=True,
@@ -82,14 +86,15 @@ class Title(models.Model):
 
     class Meta:
         verbose_name = 'Произведение'
-        verbose_name_plural = 'Произведения'
-        ordering = ('-year',)
+        ordering = ['-year']
 
     def __str__(self):
         return self.name
 
 
 class Review(models.Model):
+    """Модель Отзывы."""
+
     text = models.TextField(
         verbose_name='Отзыв'
     )
@@ -120,17 +125,19 @@ class Review(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
-        ordering = ('-pub_date',)
+        ordering = ['-pub_date']
         constraints = (
             models.UniqueConstraint(fields=('author', 'title'),
                                     name='unique_author_title'),
         )
 
     def __str__(self):
-        return f'Произведение: {str(self.title)[:15]}, Автор: {self.author}'
+        return self.text
 
 
 class Comment(models.Model):
+    """Модель Комментарии к отзывам."""
+
     author = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
@@ -154,7 +161,7 @@ class Comment(models.Model):
     class Meta:
         verbose_name = 'Комментарий'
         verbose_name_plural = 'Комментарии'
-        ordering = ('-pub_date',)
+        ordering = ['-pub_date']
 
     def __str__(self):
-        return self.text[:15]
+        return self.text
