@@ -17,7 +17,7 @@ class Category(models.Model):
     )
 
     class Meta:
-        verbose_name = "Категория"
+        verbose_name = 'Категория'
         ordering = ['name']
         constraints = [
             models.UniqueConstraint(
@@ -42,7 +42,7 @@ class Genre(models.Model):
     )
 
     class Meta:
-        verbose_name = "Жанр"
+        verbose_name = 'Жанр'
         ordering = ['name']
         constraints = [
             models.UniqueConstraint(
@@ -100,8 +100,8 @@ class Review(models.Model):
     )
     score = models.IntegerField(
         validators=[
-            MinValueValidator(1, message="Минимальная оценка - 1"),
-            MaxValueValidator(10, message="Максимальная оценка - 10"),
+            MinValueValidator(1, message='Минимальная оценка - 1'),
+            MaxValueValidator(10, message='Максимальная оценка - 10'),
         ],
         verbose_name='Оценка'
     )
@@ -112,13 +112,13 @@ class Review(models.Model):
     author = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name="reviews",
+        related_name='reviews',
         verbose_name='Автор'
     )
     title = models.ForeignKey(
         Title,
         on_delete=models.CASCADE,
-        related_name="reviews",
+        related_name='reviews',
         verbose_name='Произведение'
     )
 
@@ -141,7 +141,7 @@ class Comment(models.Model):
     author = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name="comments",
+        related_name='comments',
         verbose_name='Автор'
     )
     text = models.TextField(
@@ -154,7 +154,7 @@ class Comment(models.Model):
     review = models.ForeignKey(
         Review,
         on_delete=models.CASCADE,
-        related_name="comments",
+        related_name='comments',
         verbose_name='Отзыв'
     )
 

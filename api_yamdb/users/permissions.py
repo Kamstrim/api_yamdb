@@ -3,8 +3,7 @@ from rest_framework import permissions
 
 class IsAdmin(permissions.BasePermission):
     """Разрешение, позволяющее производить действия с объектами
-    только пользователям с правами администратора.
-    """
+    только пользователям с правами администратора."""
 
     def has_permission(self, request, view):
         return (request.user.is_authenticated
@@ -13,8 +12,7 @@ class IsAdmin(permissions.BasePermission):
 
 class IsAuthorAdminModeratorOrReadOnly(permissions.BasePermission):
     """Разрешение, позволяющее добавлять, удалять и редактировать объекты
-    только пользователям с правами администратора.
-    """
+    только пользователям с правами администратора."""
 
     def has_permission(self, request, view):
         return (
@@ -33,8 +31,7 @@ class IsAuthorAdminModeratorOrReadOnly(permissions.BasePermission):
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     """Разрешение, позволяющее добавлять и удалять объекты
-    только пользователям с правами администратора.
-    """
+    только пользователям с правами администратора."""
 
     def has_permission(self, request, view):
         return (

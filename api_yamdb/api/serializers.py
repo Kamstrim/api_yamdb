@@ -17,7 +17,7 @@ class GenreSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
-        slug_field="username",
+        slug_field='username',
         read_only=True,
     )
 
@@ -26,14 +26,14 @@ class ReviewSerializer(serializers.ModelSerializer):
         fields = ('id', 'text', 'author', 'score', 'pub_date')
 
     def validate(self, data):
-        if self.context["request"].method != "POST":
+        if self.context['request'].method != 'POST':
             return data
 
-        author = self.context["request"].user
-        title_id = self.context["view"].kwargs.get("title_id")
+        author = self.context['request'].user
+        title_id = self.context['view'].kwargs.get('title_id')
         if Review.objects.filter(title_id=title_id, author=author).exists():
             raise serializers.ValidationError(
-                "На данное произведение уже есть отзыв от Вас, спасибо!)"
+                'На данное произведение уже есть отзыв от Вас, спасибо!)'
             )
         return data
 
@@ -41,7 +41,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     author = serializers.SlugRelatedField(
         read_only=True,
-        slug_field="username",
+        slug_field='username',
     )
 
     class Meta:
@@ -52,11 +52,11 @@ class CommentSerializer(serializers.ModelSerializer):
 class TitleSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
         queryset=Category.objects.all(),
-        slug_field="slug"
+        slug_field='slug'
     )
     genre = serializers.SlugRelatedField(
         queryset=Genre.objects.all(),
-        slug_field="slug",
+        slug_field='slug',
         # required=True,
         many=True
     )
