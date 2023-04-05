@@ -4,14 +4,15 @@ from rest_framework import viewsets, filters, mixins
 from rest_framework.generics import get_object_or_404
 
 from .filters import TitleFilter
-from .permissions import IsAdminOrReadOnly, IsAuthorAdminModeratorOrReadOnly
 from .serializers import (CategorySerializer,
                           GenreSerializer,
                           TitleSerializer,
                           CommentSerializer,
                           ReviewSerializer, TitleListSerializer
                           )
-
+from users.permissions import (IsAdminOrReadOnly,
+                               IsAuthorAdminModeratorOrReadOnly
+                               )
 from reviews.models import (Category,
                             Genre,
                             Title,
@@ -26,6 +27,9 @@ class CreateListDestroyViewSet(mixins.CreateModelMixin, mixins.ListModelMixin,
 
 
 class ReviewViewSet(viewsets.ModelViewSet):
+    """Получение списка отзывов, одного отзыва. Создание отзыва.
+        Изменение и удаление отзыва."""
+
     serializer_class = ReviewSerializer
     permission_classes = [IsAuthorAdminModeratorOrReadOnly]
 
@@ -42,6 +46,9 @@ class ReviewViewSet(viewsets.ModelViewSet):
 
 
 class CommentViewSet(viewsets.ModelViewSet):
+    """Получение списка комментариев к отзыву, одного комментария.
+        Создание комментария. Изменение и удаление комментария."""
+
     serializer_class = CommentSerializer
     permission_classes = [IsAuthorAdminModeratorOrReadOnly]
 
@@ -58,24 +65,31 @@ class CommentViewSet(viewsets.ModelViewSet):
 
 
 class CategoryViewSet(CreateListDestroyViewSet):
+    """Получение списка категорий, создание и удаление категории."""
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [filters.SearchFilter]
-    search_fields = ('name',)
+    search_fields = ['name']
     lookup_field = 'slug'
 
 
 class GenreViewSet(CreateListDestroyViewSet):
+    """Получение списка жанров, создание и удаление жанра."""
+
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [filters.SearchFilter]
-    search_fields = ('name',)
+    search_fields = ['name']
     lookup_field = 'slug'
 
 
 class TitleViewSet(viewsets.ModelViewSet):
+    """Получение списка произведений, одного произведения.
+        Создание, изменение и удаление произведения."""
+
     queryset = Title.objects.all().annotate(
         rating=Avg('reviews__score')
     ).order_by('-rating')

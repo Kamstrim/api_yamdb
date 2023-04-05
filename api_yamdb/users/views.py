@@ -18,12 +18,22 @@ from .serializers import (ConfirmationSerializer,
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def get_confirmation_code(request):
-    """Создаем пользователя и отправляем код подтверждения"""
+    """Добавление нового пользователя. YaMDB отправляет письмо с кодом
+    подтверждения (confirmation_code) на адрес email."""
+
     serializer = ConfirmationSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     email = serializer.data.get('email')
     username = serializer.data.get('username')
-    user, created = CustomUser.objects.get_or_create(
+    username_associated = CustomUser.objects.filter(username=username).exists()
+    email_associated = CustomUser.objects.filter(email=email).exists()
+    if email_associated and not username_associated:
+        return Response('Данный email не занят',
+                        status=status.HTTP_400_BAD_REQUEST)
+    if username_associated and not email_associated:
+        return Response('Данный "username" занят',
+                        status=status.HTTP_400_BAD_REQUEST)
+    user, _ = CustomUser.objects.get_or_create(
         username=username,
         email=email
     )
@@ -40,7 +50,8 @@ def get_confirmation_code(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def get_jwt_token(request):
-    """Получение Токена"""
+    """Запрос и получение token (JWT-токен)."""
+
     serializer = TokenSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
     user = get_object_or_404(
@@ -64,13 +75,15 @@ def get_jwt_token(request):
 
 
 class UserViewSet(viewsets.ModelViewSet):
+    """Работа с пользователями."""
+
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     lookup_field = 'username'
     permission_classes = [IsAdmin]
-    http_method_names = ('get', 'post', 'delete', 'patch')
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('username',)
+    http_method_names = ['get', 'post', 'delete', 'patch']
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['username']
 
     @action(
         detail=False,
