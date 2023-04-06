@@ -1,36 +1,97 @@
+# Проект YaMDb
 
-README.md
+Проект YaMDb собирает отзывы пользователей на произведения. Произведения делятся на категории «Книги», «Фильмы», «Музыка», «Искусство» и другие. Также произведениям могут быть присвоены жанры. Создание и управление категориями, произведениями и жанрами осуществляется только администратором. Пользователи могут оставить к произведениям текстовые отзывы и оценить их по шкале от одного до десяти. Из пользовательских оценок формируется усреднённая оценка произведения — рейтинг. Присутствует возможность комментирования отзывов.
 
-Что это за проект: Yambd - это сайт для критиков творчества в любом его проявлении.
+## Функционал API:
 
-Какие задачи решает:
+1. Рецензирование и оценка произведений. Выстраивание системы рейтингов.
 
-    Помогает молодым критикам заявить о себе.
+2. Комментирование оставленных отзывов.
 
-Как запустить проект:
+## **Разработчики**
 
-Клонировать репозиторий и перейти в него в командной строке:
+### 1. [Дмитрий Семенов](https://github.com/Kamstrim) (тим-лид):
 
-git clone https://github.com/Kamstrim/api_yamdb.git
+Разработка системы регистрации и аутентификации, прав доступа, работы с токеном, системы подтверждения через e-mail.
 
-cd api_yamdb
+### 2. [Павел Бутаков](https://github.com/KottaPav):
 
-Cоздать и активировать виртуальное окружение:
+Разработка моделей Categories, Genres, Titles, выгрузка БД из файлов формата .csv.
 
-python3 -m venv venv
+### 3. [Евгений Щетинин](https://github.com/Zmeuko):
 
-source venv/bin/activate
+Разработка моделей Review и Comments.
 
-Установить зависимости из файла requirements.txt:
+## **Стек технологий**
 
-python3 -m pip install --upgrade pip
+!python version (https://img.shields.io/badge/Python-3.9-yellowgreen)
 
-pip install -r requirements.txt
+!python version (https://img.shields.io/badge/Django-2.2.16-yellowgreen)
 
-Выполнить миграции:
+!python version (https://img.shields.io/badge/djangorestframework-3.12.4-yellowgreen)
 
-python3 manage.py migrate
+!python version (https://img.shields.io/badge/djangorestframework--simplejwt-5.1-yellowgreen)
 
-Запустить проект:
+## **Как запустить проект**
 
-python3 manage.py runserver
+1. Клонировать репозиторий через командную строку:
+
+`git clone https://github.com/Kamstrim/api_yamdb.git`
+
+1. Перейти в папку с проектом
+
+`cd api_yamdb`
+
+1. Cоздать и активировать виртуальное окружение:
+- WIN:
+
+`python -m venv venv`
+
+`source venv/scripts/activate`
+
+- MAC/Linux:
+
+`python3.9 -m venv venv`
+
+`source venv/bin/activate`
+
+1. Установить зависимости из файла requirements.txt:
+- WIN:
+
+`python -m pip install --upgrade pip`
+
+`pip install -r requirements.txt`
+
+- MAC/Linux:
+
+`python3.9 -m pip install --upgrade pip`
+
+`pip install -r requirements.txt`
+
+1. Перейти в корневую папку проекта:
+
+`cd api_yamdb`
+
+1. Выполнить миграции:
+- WIN:
+
+`python manage.py makemigrations`
+
+`python manage.py migrate`
+
+- MAC/Linux:
+
+`python3 manage.py makemigrations`
+
+`python3 manage.py migrate`
+
+1. Запустить проект:
+- WIN:
+
+`python manage.py runserver`
+
+- MAC/Linux:
+
+`python3 manage.py runserver`
+
+Примеры запросов и документация по ссылке ([http://127.0.0.1:8000/redoc/](http://127.0.0.1:8000/redoc/))
