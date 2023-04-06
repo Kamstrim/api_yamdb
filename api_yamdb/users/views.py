@@ -28,7 +28,7 @@ def get_confirmation_code(request):
     username_associated = CustomUser.objects.filter(username=username).exists()
     email_associated = CustomUser.objects.filter(email=email).exists()
     if email_associated and not username_associated:
-        return Response('Данный email не занят',
+        return Response('Данный "email" занят',
                         status=status.HTTP_400_BAD_REQUEST)
     if username_associated and not email_associated:
         return Response('Данный "username" занят',

@@ -28,8 +28,14 @@ class ConfirmationSerializer(serializers.ModelSerializer):
     def validate_username(self, value):
         if value == 'me':
             raise serializers.ValidationError(
-                "Использовать имя 'me' в качестве username запрещено.")
+                'Использовать имя "me" в качестве username запрещено.')
         return value
+
+    def validate(self, data):
+        if data['username'] == data['email']:
+            raise serializers.ValidationError(
+                '"username" не может совпадать с "email"!')
+        return data
 
 
 class TokenSerializer(serializers.Serializer):
